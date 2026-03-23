@@ -1,16 +1,35 @@
-import rigoImageUrl from "../assets/img/rigo-baby.jpg";
-import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
+import React, { useEffect } from "react";
+import { useGlobalReducer } from "../hooks/useGlobalReducer";
 
-export const Home = () => {
+const Home = () => {
+  const { store, actions } = useGlobalReducer();
 
-  const {store, dispatch} =useGlobalReducer()
+  useEffect(() => {
+    actions.getPeople();
+  }, []);
 
-	return (
-		<div className="text-center mt-5">
-			<h1>Hello Rigo!!</h1>
-			<p>
-				<img src={rigoImageUrl} />
-			</p>
-		</div>
-	);
-}; 
+  return (
+    <div className="container">
+      <h1 className="text-center mt-4">Star Wars 🚀</h1>
+
+      <div className="row">
+        {store.people.map((item, index) => (
+          <div className="col-md-4" key={index}>
+            <div className="card p-3 m-3">
+              <h5>{item.name}</h5>
+
+              <button
+                className="btn btn-primary"
+                onClick={() => actions.addFavorite(item.name)}
+              >
+                ⭐ Favorito
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default Home;

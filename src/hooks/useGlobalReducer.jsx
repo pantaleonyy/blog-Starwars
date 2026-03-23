@@ -1,24 +1,56 @@
-// Import necessary hooks and functions from React.
-import { useContext, useReducer, createContext } from "react";
-import storeReducer, { initialStore } from "../store"  // Import the reducer and the initial state.
+import { createContext, useContext, useReducer } from "react";
 
-// Create a context to hold the global state of the application
-// We will call this global state the "store" to avoid confusion while using local states
-const StoreContext = createContext()
+const StoreContext = createContext();
 
-// Define a provider component that encapsulates the store and warps it in a context provider to 
-// broadcast the information throught all the app pages and components.
-export function StoreProvider({ children }) {
-    // Initialize reducer with the initial state.
-    const [store, dispatch] = useReducer(storeReducer, initialStore())
-    // Provide the store and dispatch method to all child components.
-    return <StoreContext.Provider value={{ store, dispatch }}>
-        {children}
+const initialState = {
+  people: [],
+  favorites: []
+};
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case "SET_PEOPLE":
+      return { ...state, people: action.payload };
+
+    case "ADD_FAVORITE":
+      if (state.favorites.includes(action.payload)) return state;
+      return { ...state, favorites: [...state.favorites, action.payload] };
+
+    case "REMOVE_FAVORITE":
+      return {
+        ...state,
+        favorites: state.favorites.filter(f => f !== action.payload)
+      };
+
+    default:
+      return state;
+  }
+};
+
+export const StoreProvider = ({ children }) => {
+  const [store, dispatch] = useReducer(reducer, initialState);
+
+  const actions = {
+    getPeople: async () => {
+      const resp = await fetch("https://www.swapi.tech/api/people");
+      const data = await resp.json();
+      dispatch({ type: "SET_PEOPLE", payload: data.results });
+    },
+
+    addFavorite: (name) => {
+      dispatch({ type: "ADD_FAVORITE", payload: name });
+    },
+
+    removeFavorite: (name) => {
+      dispatch({ type: "REMOVE_FAVORITE", payload: name });
+    }
+  };
+
+  return (
+    <StoreContext.Provider value={{ store, actions }}>
+      {children}
     </StoreContext.Provider>
-}
+  );
+};
 
-// Custom hook to access the global state and dispatch function.
-export default function useGlobalReducer() {
-    const { dispatch, store } = useContext(StoreContext)
-    return { dispatch, store };
-}
+export const useGlobalReducer = () => useContext(StoreContext);

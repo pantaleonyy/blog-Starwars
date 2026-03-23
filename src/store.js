@@ -1,32 +1,35 @@
-export const initialStore=()=>{
-  return{
-    message: null,
-    todos: [
-      {
-        id: 1,
-        title: "Make the bed",
-        background: null,
+const getState = ({ getStore, getActions, setStore }) => {
+  return {
+    store: {
+      people: [],
+      favorites: []
+    },
+    actions: {
+      getPeople: async () => {
+        try {
+          const resp = await fetch("https://www.swapi.tech/api/people");
+          const data = await resp.json();
+          setStore({ people: data.results });
+        } catch (error) {
+          console.log(error);
+        }
       },
-      {
-        id: 2,
-        title: "Do my homework",
-        background: null,
+
+      addFavorite: (item) => {
+        const store = getStore();
+        if (!store.favorites.includes(item)) {
+          setStore({ favorites: [...store.favorites, item] });
+        }
+      },
+
+      removeFavorite: (item) => {
+        const store = getStore();
+        setStore({
+          favorites: store.favorites.filter(fav => fav !== item)
+        });
       }
-    ]
-  }
-}
+    }
+  };
+};
 
-export default function storeReducer(store, action = {}) {
-  switch(action.type){
-    case 'add_task':
-
-      const { id,  color } = action.payload
-
-      return {
-        ...store,
-        todos: store.todos.map((todo) => (todo.id === id ? { ...todo, background: color } : todo))
-      };
-    default:
-      throw Error('Unknown action.');
-  }    
-}
+export default getState;
