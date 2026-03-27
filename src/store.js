@@ -1,35 +1,28 @@
-const getState = ({ getStore, getActions, setStore }) => {
-  return {
-    store: {
-      people: [],
-      favorites: []
-    },
-    actions: {
-      getPeople: async () => {
-        try {
-          const resp = await fetch("https://www.swapi.tech/api/people");
-          const data = await resp.json();
-          setStore({ people: data.results });
-        } catch (error) {
-          console.log(error);
-        }
-      },
 
-      addFavorite: (item) => {
-        const store = getStore();
-        if (!store.favorites.includes(item)) {
-          setStore({ favorites: [...store.favorites, item] });
-        }
-      },
-
-      removeFavorite: (item) => {
-        const store = getStore();
-        setStore({
-          favorites: store.favorites.filter(fav => fav !== item)
-        });
-      }
-    }
-  };
+export const initialStore = {
+  favorites: [],    
 };
 
-export default getState;
+export function reducer(state, action) {
+  switch (action.type) {
+    case "ADD_FAVORITE": {
+      const exists = state.favorites.some(f => f.id === action.payload.id);
+      if (exists) return state;
+
+      return {
+        ...state,
+        favorites: [...state.favorites, action.payload],
+      };
+    }
+
+    case "REMOVE_FAVORITE": {
+      return {
+        ...state,
+        favorites: state.favorites.filter(f => f.id !== action.payload),
+      };
+    }
+
+    default:
+      return state;
+  }
+}

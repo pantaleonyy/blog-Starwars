@@ -1,38 +1,41 @@
 import React from "react";
-import { useGlobalReducer } from "../hooks/useGlobalReducer";
+import { Link } from "react-router-dom";
+import { useFavorites } from "./FavoritesContext.jsx"; 
 
-const Navbar = () => {
-  const { store, actions } = useGlobalReducer();
+export const Navbar = () => {
+  const { favorites } = useFavorites();
 
   return (
-    <nav className="navbar navbar-dark bg-dark px-3">
-      <span className="navbar-brand">Star Wars Blog</span>
+    <nav
+      className="navbar navbar-dark"
+      style={{
+        backgroundColor: "#000000",
+        borderBottom: "2px solid #f5c518",
+      }}
+    >
+      <div className="container d-flex justify-content-between align-items-center">
+        <Link to="/" className="navbar-brand d-flex align-items-center">
+          <img
+            src="https://upload.wikimedia.org/wikipedia/commons/b/b8/StarWarsLogo.jpeg"
+            alt="Star Wars"
+            style={{ height: "100px" }}
+          />
+        </Link>
 
-      <div className="dropdown">
-        <button className="btn btn-warning dropdown-toggle" data-bs-toggle="dropdown">
-          Favoritos ({store.favorites.length})
-        </button>
+        <Link
+          to="/favorites"
+          className="btn btn-outline-warning position-relative"
+          style={{ borderRadius: "50%" }}
+        >
+          <i className="fa-solid fa-heart"></i>
 
-        <ul className="dropdown-menu dropdown-menu-end">
-          {store.favorites.length === 0 ? (
-            <li className="dropdown-item">No hay favoritos</li>
-          ) : (
-            store.favorites.map((fav, i) => (
-              <li key={i} className="dropdown-item d-flex justify-content-between">
-                {fav}
-                <button
-                  className="btn btn-danger btn-sm"
-                  onClick={() => actions.removeFavorite(fav)}
-                >
-                  X
-                </button>
-              </li>
-            ))
+          {favorites.length > 0 && (
+            <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+              {favorites.length}
+            </span>
           )}
-        </ul>
+        </Link>
       </div>
     </nav>
   );
 };
-
-export default Navbar;

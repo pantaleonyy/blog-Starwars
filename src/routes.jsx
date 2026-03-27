@@ -9,6 +9,15 @@ import { Layout } from "./pages/Layout";
 import { Home } from "./pages/Home";
 import { Single } from "./pages/Single";
 import { Demo } from "./pages/Demo";
+import {  PersonCard} from "./components/PersonCard";
+import { PlanetCard } from "./components/PlanetCard";
+import { VehicleCard } from "./components/VehicleCard";
+import { PersonDetails } from "./components/PersonDetails";
+import { PlanetDetails } from "./components/PlanetDetails";
+import { VehicleDetails } from "./components/VehicleDetails";
+import { Favorites } from "./pages/Favorites.jsx";
+
+
 
 export const router = createBrowserRouter(
     createRoutesFromElements(
@@ -25,6 +34,16 @@ export const router = createBrowserRouter(
         <Route path= "/" element={<Home />} />
         <Route path="/single/:theId" element={ <Single />} />  {/* Dynamic route for single items */}
         <Route path="/demo" element={<Demo />} />
+
+        <Route path="Person/:id" element={<PersonDetails/>}/>
+        <Route path="planet/:id" element={<PlanetDetails />} />
+        <Route path="vehicle/:id" element={<VehicleDetails />} />
+        <Route path="Favorites" element={<Favorites/>}/>
+
+
+         <Route path="/PersonCard" element={<PersonCard/>} />
+        <Route path="/PlanetCard" element={<PlanetCard/>} />
+        <Route path="/VehicleCard" element={<VehicleCard/>}/>
       </Route>
     )
 );

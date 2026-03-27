@@ -1,0 +1,26 @@
+:root {
+  
+  --bs-body-bg: #050509;           
+  --bs-body-color: #f9fafb;        
+
+  
+  --bs-primary: #f97316;           
+  --bs-primary-rgb: 249, 115, 22;
+
+  --bs-secondary: #facc15;         
+  --bs-secondary-rgb: 250, 204, 21;
+
+  --bs-info: #22c55e;             
+  --bs-info-rgb: 34, 197, 94;
+
+
+  --sw-card-bg-top: #111827;
+  --sw-card-bg-bottom: #020617;
+  --sw-card-border: #27272f;
+}
+
+body {
+  background: radial-gradient(circle at top, #1f2937 0, transparent 55%),
+              radial-gradient(circle at bottom, #020617 0, #000 60%);
+  min-height: 100vh;
+}
